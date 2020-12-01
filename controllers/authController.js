@@ -176,18 +176,18 @@ exports.verifyAuthLink = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = catchAsync(async (req, res, next) => {
-  // Remove refreshTokens from database
+  // Removed refreshTokens from database
   req.user.refreshTokens = [];
 
-  // Set cookies to expired
-  res.cookie('refreshToken', 'loggedout', {
+  // Remove cookies
+  res.clearCookie('accessToken', {
     httpOnly: true,
     sameSite: process.env.NODE_ENV == 'production' ? 'none' : 'Lax',
     secure: process.env.NODE_ENV == 'production' ? true : false,
     maxAge: 0,
   });
 
-  res.cookie('accessToken', 'loggedout', {
+  res.clearCookie('refreshToken', {
     httpOnly: true,
     sameSite: process.env.NODE_ENV == 'production' ? 'none' : 'Lax',
     secure: process.env.NODE_ENV == 'production' ? true : false,
@@ -197,7 +197,7 @@ exports.logout = catchAsync(async (req, res, next) => {
   await req.user.save();
 
   res.status(200).json({
-    stutus: 'success',
+    status: 'success',
     data: {},
   });
 });
